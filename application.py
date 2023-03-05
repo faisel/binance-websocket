@@ -1,31 +1,27 @@
-from flask import Blueprint, make_response, render_template, current_app
+from flask import Flask, render_template
 import json
+from stream.websockets import start_websocket_listener
 
-blueprint = Blueprint(
-    'index',
-    __name__,
-    template_folder='templates',
-    static_folder='static'
-)
+application = Flask(__name__)
 
+# Start the websocket
+start_websocket_listener("START")
 
-@blueprint.route("/", methods=["get"])
-def index_route():
-    return make_response(
-        render_template(
-            "index.jinja2",
-        )
-    )
+###API Home Page
+@application.route('/')
+def hello_world():
+    return render_template("index.jinja2", message="Hello 5cel! Its up & running")
 
 
-@blueprint.route('/price', methods=['GET', 'POST'])
+
+@application.route('/price', methods=['GET', 'POST'])
 def price_page():
 
     data = None
 
     # Opening JSON file
-    btc_price = open('app/data/price_btc.json')
-    eth_price = open('app/data/price_eth.json')
+    btc_price = open('price_btc.json')
+    eth_price = open('price_eth.json')
 
     # returns JSON object as a dictionary
     btc_data = None
@@ -59,3 +55,12 @@ def price_page():
         print("NO btc_data or NO eth_data - /price")
 
     return data
+
+
+
+
+
+
+if __name__ == "__main__":
+  application.run(host="0.0.0.0",port=80, debug=True)
+  

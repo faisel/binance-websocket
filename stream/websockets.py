@@ -5,7 +5,7 @@ import os
 import logging
 from datetime import datetime
 from unicorn_binance_websocket_api.manager import BinanceWebSocketApiManager
-from app.blueprints.index_page.utils.stream_trigger import websocket_price_triggered
+from stream.stream_trigger import websocket_price_triggered
 
 #logging.getLogger("unicorn_binance_websocket_api")
 logging.basicConfig(level=logging.DEBUG,

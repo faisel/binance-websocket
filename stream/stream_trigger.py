@@ -27,12 +27,12 @@ def save_price_locally(data):
     
     if(data["symbol"] == "BTCUSDT"):
         # Writing to sample.json
-        with open("app/data/price_btc.json", "w") as outfile:
+        with open("price_btc.json", "w") as outfile:
             outfile.write(json_object)
 
     if(data["symbol"] == "ETHUSDT"):
         # Writing to sample.json
-        with open("app/data/price_eth.json", "w") as outfile:
+        with open("price_eth.json", "w") as outfile:
             outfile.write(json_object)
 
     return True
