@@ -1,14 +1,15 @@
 
 
-http://127.0.0.1:5000/api
+http://127.0.0.1:5000/
 
-Domain: https://i43nqeej25.eu-central-1.awsapprunner.com/
+Domain: kh-binance-faisel-btc-eth: https://5i3mr7mjmc.eu-central-1.awsapprunner.com/ - https://killerhedge.bullparrot.com/
+Domain: binance-websocket: https://i43nqeej25.eu-central-1.awsapprunner.com/ - https://binance.bullparrot.com/
 
 
 
 #### Git commit & push - When push to github main, AWS will automatically update to server
 git add .
-git commit -m 'Cors updated'
+git commit -m 'price trigger updated'
 git push origin main
 
 
