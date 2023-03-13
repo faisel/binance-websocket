@@ -1,7 +1,6 @@
-from flask import Flask, render_template
+from flask import Flask, jsonify, render_template
 import json
 from stream.websockets import start_websocket_listener
-from flask_cors import cross_origin
 
 application = Flask(__name__)
 
@@ -15,9 +14,8 @@ def hello_world():
 
 
 
-@application.route('/price', methods=['GET', 'POST'])
-@cross_origin
-def price_page():
+@application.route('/price', methods=['GET'])
+def price():
 
     data = None
 
@@ -56,10 +54,11 @@ def price_page():
     else:
         print("NO btc_data or NO eth_data - /price")
 
-    return data
+    response = jsonify(data)
+    # Enable Access-Control-Allow-Origin
+    response.headers.add("Access-Control-Allow-Origin", "*")
 
-
-
+    return response
 
 
 
