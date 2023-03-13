@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 import json
 from stream.websockets import start_websocket_listener
+from flask_cors import cross_origin
 
 application = Flask(__name__)
 
@@ -15,6 +16,7 @@ def hello_world():
 
 
 @application.route('/price', methods=['GET', 'POST'])
+@cross_origin
 def price_page():
 
     data = None
