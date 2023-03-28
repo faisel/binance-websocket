@@ -63,7 +63,7 @@ def trigger_webhook(price_data):
         "data" : price_data
     }
 
-    print(sendData)
+    #print(sendData)
 
     url = "https://killerhedge.bullparrot.com/crypto-webhook"
     if(price_data):
@@ -75,9 +75,6 @@ def trigger_webhook(price_data):
 
 #Check if the websocket is working properly
 def is_websocket_working():
-
-    print("is_websocket_working yes every 5 minutes")
-
     data = None
 
     # Opening JSON file
@@ -101,7 +98,8 @@ def is_websocket_working():
     
     now = datetime.now()
     current_time = datetime.timestamp(now)
-
+    
+    print("btc_data", btc_data)
     if(btc_data):
         current_time_reduced_2_min = current_time - 120
         btc_timestamp = btc_data["timestamp"]
@@ -111,7 +109,8 @@ def is_websocket_working():
             logging.error("Danger!!!! App crushed, BTC price NOT LIVE, Urgent!!!! restart app aws elastic beanstalk, Websocket is not woring, is_websocket_working")
     else:
         print("NO btc_data - is_websocket_working")
-
+    
+    print("eth_data", eth_data)
     if(eth_data):
         current_time_reduced_2_min = current_time - 120
         eth_timestamp = eth_data["timestamp"]

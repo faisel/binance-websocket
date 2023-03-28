@@ -42,7 +42,7 @@ def handle_price_change(symbol, timestamp, price):
         "symbol": symbol,
         "price": price
     }
-    print(chakka)
+    #print(chakka)
 
 
 def process_stream_data(binance_websocket_api_manager):
