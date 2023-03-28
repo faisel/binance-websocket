@@ -4,11 +4,59 @@
 window.addEventListener('load', function () {
     // Your document is loaded.
     var fetchInterval = 1000; // 1 seconds.
-
     // Invoke the request every 1 seconds.
     setInterval(fetchprice, fetchInterval);
+
+
+    var fetchInterval5min = 60000; // 5 Minutes.
+    setInterval(testwebsocket, fetchInterval5min);
+
 });
+
+
   
+function testwebsocket() {
+    const url = '/test-websocket';
+    fetch(url)
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+        if(data) {
+            updateSocketValues(data)
+            console.log("test-websocket_data", data);
+        }
+    })
+    .catch(function(error) {
+        // $("#btc-danger-alert").show();
+        // $("#eth-danger-alert").show();
+        console.log("ERROR test-websocket", error);
+    });
+}
+
+function updateSocketValues(data) {
+
+    const btc_test_div = document.getElementById('btc-live-price-test-success-time');
+    const eth_test_div = document.getElementById('eth-live-price-test-success-time');
+
+    if(data["is_btc_data_ok"]) {
+        $('#btc-live-price-test-success').removeClass('price-error');
+        btc_test_div.innerHTML=data["test_time"]+" ✅";
+    } else {
+        $('#btc-live-price-test-success').addClass("price-error");
+        btc_test_div.innerHTML=data["btc_data"]["apptime"]+" ⛔️⛔️";
+    }
+    
+    if(data["is_eth_data_ok"]) {
+        $('#eth-live-price-test-success').removeClass("price-error");
+        eth_test_div.innerHTML=data["test_time"]+" ✅";
+    } else {
+        $('#eth-live-price-test-success').addClass("price-error");
+        eth_test_div.innerHTML=data["eth_data"]["apptime"]+" ⛔️⛔️";
+    }
+    
+}
+
   
 function fetchprice() {
 
@@ -79,4 +127,5 @@ function updateValues(data) {
 
 $(document).ready(function () {
     fetchprice();
+    testwebsocket();
 });

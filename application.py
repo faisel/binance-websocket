@@ -1,19 +1,9 @@
 from flask import Flask, jsonify, render_template
 import json
-import schedule
-from threading import Thread
 from stream.websockets import start_websocket_listener
-
-from stream.stream_trigger import get_env_var, run_schedule, job
+from stream.stream_trigger import get_env_var, is_websocket_working
 
 application = Flask(__name__)
-
-#This is for to schedule for create new hedge
-#schedule.every(5).seconds.do(job)
-schedule.every(2).minutes.do(job)
-t = Thread(target=run_schedule)
-t.start()
-
 
 
 # Start the websocket
@@ -28,6 +18,19 @@ def index():
         "env_var": env_var
     })
     return render_template("index.jinja2", message="Hello 5cel! Its up & running", data=sendData)
+
+
+@application.route('/test-websocket', methods=['GET'])
+def test_websocket():
+    data = None
+    check_websocket = is_websocket_working()
+    if(check_websocket):
+        data = check_websocket
+
+    response = jsonify(data)
+    # Enable Access-Control-Allow-Origin
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
 
 
 

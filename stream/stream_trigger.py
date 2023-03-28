@@ -1,6 +1,5 @@
 from flask import jsonify
 import json, requests, logging
-import schedule
 import time
 from datetime import datetime
 import smtplib
@@ -8,17 +7,6 @@ from email.message import EmailMessage
 import os
 from dotenv import load_dotenv, find_dotenv
 
-start_time = time.time()
-
-def job():
-    is_websocket_working()
-    print("Schedule Triggered " + str(time.time() - start_time))
-
-
-def run_schedule():
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
 
 
 #Get the trigger from hedge_stream_websocket
@@ -62,20 +50,26 @@ def trigger_webhook(price_data):
         "passphrase" : "0cce3DB04ed7-e645-4b16-8786-b260a34f5Z47433ab32",
         "data" : price_data
     }
-
     #print(sendData)
-
     url = "https://killerhedge.bullparrot.com/crypto-webhook"
     if(price_data):
         r = requests.post(url, data=json.dumps(sendData), headers={"Content-Type": "application/json", "Access-Control-Allow-Origin": "*"})
 
     return True
-
-
+    
 
 #Check if the websocket is working properly
 def is_websocket_working():
-    data = None
+    sendData = ({
+        "status": False,
+        "is_btc_data_ok" : False,
+        "is_eth_data_ok" : False,
+        "message": "get_env_var Started",
+        "btc_data": None,
+        "eth_data": None,
+        "test_time" : None
+
+    }) 
 
     # Opening JSON file
     btc_price = open('price_btc.json')
@@ -88,6 +82,8 @@ def is_websocket_working():
     except json.JSONDecodeError:
         print("Empty response - price_btc.json - is_websocket_working")
         pass
+    finally:
+        btc_price.close()
 
     eth_data = None
     try:
@@ -95,33 +91,56 @@ def is_websocket_working():
     except json.JSONDecodeError:
         print("Empty response - price_eth.json - is_websocket_working")
         pass
+    finally:
+        eth_price.close()
     
+    if(btc_data and eth_data):
+        sendData["status"] = True
+        sendData["message"] = "Yes we have btc_data & eth_data"
+    else:
+        sendData["message"] = "No btc_data and eth_data available"
+
     now = datetime.now()
     current_time = datetime.timestamp(now)
+    current_time_string = now.strftime("%b")+" "+now.strftime("%d")+" "+now.strftime("%H")+":"+now.strftime("%M")+":"+now.strftime("%S")
+
+    sendData["test_time"] = str(current_time_string)
     
     print("btc_data", btc_data)
     if(btc_data):
+        sendData["btc_data"] = btc_data
         current_time_reduced_2_min = current_time - 120
         btc_timestamp = btc_data["timestamp"]
         if(btc_timestamp < current_time_reduced_2_min):
+            sendData["is_btc_data_ok"] = False
             send_noti = Email_Alert(10, "Danger!!!! App crushed, BTC price NOT LIVE, Urgent!!!! restart app aws elastic beanstalk, Websocket is not woring, is_websocket_working")
             print("Danger!!!! App crushed, BTC price NOT LIVE, Urgent!!!! restart app aws elastic beanstalk, Websocket is not woring, is_websocket_working")
             logging.error("Danger!!!! App crushed, BTC price NOT LIVE, Urgent!!!! restart app aws elastic beanstalk, Websocket is not woring, is_websocket_working")
+        else:
+            sendData["is_btc_data_ok"] = True
+
     else:
+        sendData["is_btc_data_ok"] = False
         print("NO btc_data - is_websocket_working")
     
     print("eth_data", eth_data)
     if(eth_data):
+        sendData["eth_data"] = eth_data
         current_time_reduced_2_min = current_time - 120
         eth_timestamp = eth_data["timestamp"]
         if(eth_timestamp < current_time_reduced_2_min):
+            sendData["is_eth_data_ok"] = False
             send_noti = Email_Alert(10, "Danger!!!! App crushed, ETH price NOT LIVE, Urgent!!!! restart app aws elastic beanstalk, Websocket is not woring, is_websocket_working")
             print("Danger!!!! App crushed, ETH price NOT LIVE, Urgent!!!! restart app aws elastic beanstalk, Websocket is not woring, is_websocket_working")
             logging.error("Danger!!!! App crushed, ETH price NOT LIVE, Urgent!!!! restart app aws elastic beanstalk, Websocket is not woring, is_websocket_working")
+        else:
+            sendData["is_eth_data_ok"] = True
+
     else:
+        sendData["is_eth_data_ok"] = False
         print("NO eth_data - is_websocket_working")
 
-    return True
+    return sendData
 
 #Get the environment variable
 def get_env_var():

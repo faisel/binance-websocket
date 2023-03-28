@@ -5,8 +5,10 @@
    ========================================================================== */
 
 
-
-
+body {
+   padding-top: 0px;
+}
+   
 
 #btc .card-header {
    background-color: #00e7ff;
@@ -21,8 +23,10 @@
    color: white;
 }
 
-
-
+.price-error {
+   background-color: red;
+   padding: 10px;
+}
 
 
 
