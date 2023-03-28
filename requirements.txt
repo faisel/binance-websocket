@@ -1,6 +1,6 @@
 Flask==2.2.2
 Jinja2==3.1.2
-unicorn-binance-websocket-api==1.42.0
+unicorn-binance-websocket-api==1.43.1
 certifi==2022.12.07
 itsdangerous==2.1.2
 Werkzeug==2.2.3

@@ -6,10 +6,9 @@ Domain: kh-binance-faisel-btc-eth: https://5i3mr7mjmc.eu-central-1.awsapprunner.
 Domain: binance-websocket: https://i43nqeej25.eu-central-1.awsapprunner.com/ - https://binance.bullparrot.com/
 
 
-
 #### Git commit & push - When push to github main, AWS will automatically update to server
 git add .
-git commit -m 'certifi version updated'
+git commit -m 'unicorn-binance-websocket-api updated'
 git push origin main
 
 
