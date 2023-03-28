@@ -8,7 +8,7 @@ Domain: binance-websocket: https://i43nqeej25.eu-central-1.awsapprunner.com/ - h
 
 #### Git commit & push - When push to github main, AWS will automatically update to server
 git add .
-git commit -m 'crush notification updated'
+git commit -m 'schedule updated'
 git push origin main
 
 
