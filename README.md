@@ -9,7 +9,7 @@ Domain: binance-websocket: https://i43nqeej25.eu-central-1.awsapprunner.com/ - h
 #### Git commit & push - When push to github main, AWS will automatically update to server
 #### Change update date in templates/layouts/main.jinja2
 git add .
-git commit -m 'unicorn-binance-websocket-api==1.42.0 updated'
+git commit -m 'websocket else condition updated'
 git push origin main
 
 

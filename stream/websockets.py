@@ -29,19 +29,34 @@ def handle_price_change(symbol, timestamp, price):
     current_time = datetime.now()
     current_time_string = current_time.strftime("%b")+" "+current_time.strftime("%d")+" "+current_time.strftime("%H")+":"+current_time.strftime("%M")+":"+current_time.strftime("%S")
 
-    websocket_price_triggered({
-        "apptime": current_time_string,
-        "timestamp": round(datetime.timestamp(current_time), 0),
-        "symbol": symbol,
-        "price": price
-    })
+    if(symbol and price and current_time_string):
+        websocket_price_triggered({
+            "apptime": current_time_string,
+            "timestamp": round(datetime.timestamp(current_time), 0),
+            "symbol": symbol,
+            "price": price
+        })
+    else:
+        if((not symbol) and (not price) and (not current_time_string)):
+            print("NO symbol or price or current_time_string - handle_price_change")
+            logging.error("NO symbol or price or current_time_string - handle_price_change")
+        else:
+            if(not symbol):
+                print("NO symbol - handle_price_change")
+                logging.error("NO symbol - handle_price_change")
+            if(not price):
+                print("NO price - handle_price_change")
+                logging.error("NO price - handle_price_change")
+            if(not current_time_string):
+                print("NO current_time_string - handle_price_change")
+                logging.error("NO current_time_string - handle_price_change")
 
-    chakka = {
-        "apptime": current_time_string,
-        "timestamp": round(datetime.timestamp(current_time), 0),
-        "symbol": symbol,
-        "price": price
-    }
+    # chakka = {
+    #     "apptime": current_time_string,
+    #     "timestamp": round(datetime.timestamp(current_time), 0),
+    #     "symbol": symbol,
+    #     "price": price
+    # }
     #print(chakka)
 
 
