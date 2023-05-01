@@ -16,8 +16,39 @@ def websocket_price_triggered(data):
         if(data["symbol"]):
             if(data["price"]):
                 if((data["apptime"]) and data["timestamp"]):
-                    trigger_webhook(data) #Trigger the new price to webhook
-                    save_price_locally(data) #Save the data locally
+                    json_file_price = None
+                    # Opening JSON file
+                    if(data["symbol"] == "BTCUSDT"):
+                        json_file_price = open('price_btc.json')
+                    elif(data["symbol"] == "ETHUSDT"):
+                        json_file_price = open('price_eth.json')
+
+                    if(json_file_price is not None):
+                        json_data = None
+                        try:
+                            json_data = json.load(json_file_price)
+                        except json.JSONDecodeError:
+                            print("Empty response - price_btc.json - /price")
+                            pass
+
+                        if(json_data is not None):
+                            market_price = int(round(float(data["price"]), 3))
+                            json_data_price = int(round(float(json_data["price"]), 3))
+                            if(market_price != json_data_price):
+                                trigger_webhook(data) #Trigger the new price to webhook
+
+                                # print("###########################")
+                                # print("market_price", market_price)
+                                # print("json_data_price", json_data_price)
+                                # print("###########################")
+                            # else:
+                            #     print("market_price", market_price)
+                            #     print("json_data_price", json_data_price)
+                            # trigger_webhook(data) #Trigger the new price to webhook
+                            # save_price_locally(data) #Save the data locally
+
+                        save_price_locally(data) #Save the data locally
+
                 else:
                     print("No apptime or No timestamp websocket_price_triggered "+data["symbol"]+" "+data["price"])
             else:

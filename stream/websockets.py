@@ -85,6 +85,7 @@ def start_websocket_listener(start_or_stop):
         "Triggered": "start_websocket_listener"
     })
     if(start_or_stop == "START"):
+        #channels = {'markPrice', }
         channels = {'markPrice@1s', }
         binance_websocket_api_manager.create_stream(channels, markets=lc_symbols) # Start a worker process to move the received stream_data from the stream_buffer to a print function
         sendData["status"] = True
