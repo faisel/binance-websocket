@@ -7,13 +7,22 @@ from datetime import datetime
 from unicorn_binance_websocket_api.manager import BinanceWebSocketApiManager
 from stream.stream_trigger import websocket_price_triggered
 
-#logging.getLogger("unicorn_binance_websocket_api")
+logging.getLogger("unicorn_binance_websocket_api")
 logging.basicConfig(level=logging.DEBUG,
                     filename=os.path.basename(__file__) + '.log',
                     format="{asctime} [{levelname:8}] {process} {thread} {module}: {message}",
                     style="{")
 
+# create instance of BinanceWebSocketApiManager for Binance.com Futures
 binance_websocket_api_manager = BinanceWebSocketApiManager(exchange="binance.com-futures")
+
+# set api key and secret for userData stream
+binance_api_key = os.getenv("BINANCE_API_KEY")
+binance_api_secret = os.getenv("BINANCE_API_SECRET")
+userdata_stream_id = binance_websocket_api_manager.create_stream(["arr"],
+                                                                 ["!userData"],
+                                                                 api_key=binance_api_key,
+                                                                 api_secret=binance_api_secret)
 
 def is_empty_message(message):
     if message is False:
@@ -24,17 +33,20 @@ def is_empty_message(message):
         return True
     return False
 
-
-def handle_price_change(symbol, timestamp, price):
+def handle_price_change(symbol, timestamp, price, price_big_p, price_i):
     current_time = datetime.now()
     current_time_string = current_time.strftime("%b")+" "+current_time.strftime("%d")+" "+current_time.strftime("%H")+":"+current_time.strftime("%M")+":"+current_time.strftime("%S")
+    current_time_string_price_time = datetime.fromtimestamp(round((timestamp/1000),0)).strftime('%b %d %H:%M:%S ')
 
-    if(symbol and price and current_time_string):
+    if(symbol and price and current_time_string and current_time_string_price_time):
         websocket_price_triggered({
-            "apptime": current_time_string,
+            "apptime": current_time_string_price_time,
+            "servertime":current_time_string,
             "timestamp": round(datetime.timestamp(current_time), 0),
             "symbol": symbol,
-            "price": price
+            "price": price, #// Mark price
+            "price_big_p": price_big_p, #// Index price
+            "price_i": price_i #// Estimated Settle Price, only useful in the last hour before the settlement starts
         })
     else:
         if((not symbol) and (not price) and (not current_time_string)):
@@ -51,14 +63,6 @@ def handle_price_change(symbol, timestamp, price):
                 print("NO current_time_string - handle_price_change")
                 logging.error("NO current_time_string - handle_price_change")
 
-    # chakka = {
-    #     "apptime": current_time_string,
-    #     "timestamp": round(datetime.timestamp(current_time), 0),
-    #     "symbol": symbol,
-    #     "price": price
-    # }
-    #print(chakka)
-
 
 def process_stream_data(binance_websocket_api_manager):
     while True:
@@ -70,17 +74,8 @@ def process_stream_data(binance_websocket_api_manager):
             time.sleep(0.01)
         else:
             oldest_data_dict = json.loads(oldest_data)
-            data = oldest_data_dict['data']            #  Handle price change
-            #print(data)
-            handle_price_change(symbol=data['s'], timestamp=data['T'], price=data['p'])
-
-# def start_websocket_listener():
-#     binance_websocket_api_manager = BinanceWebSocketApiManager(exchange="binance.com-futures")
-#     channels = {'markPrice', }    
-#     binance_websocket_api_manager.create_stream(channels, markets=lc_symbols)    # Start a worker process to move the received stream_data from the stream_buffer to a print function
-
-#     worker_thread = threading.Thread(target=process_stream_data, args=(binance_websocket_api_manager,))
-#     worker_thread.start()
+            data = oldest_data_dict['data'] #Handle price change
+            handle_price_change(symbol=data['s'], timestamp=data['E'], price=data['p'], price_big_p=data['P'], price_i=data['i'])
 
 
 def start_websocket_listener(start_or_stop):
@@ -90,11 +85,10 @@ def start_websocket_listener(start_or_stop):
         "Triggered": "start_websocket_listener"
     })
     if(start_or_stop == "START"):
-        channels = {'markPrice', }
-        binance_websocket_api_manager.create_stream(channels, markets=lc_symbols)    # Start a worker process to move the received stream_data from the stream_buffer to a print function
+        channels = {'markPrice@1s', }
+        binance_websocket_api_manager.create_stream(channels, markets=lc_symbols) # Start a worker process to move the received stream_data from the stream_buffer to a print function
         sendData["status"] = True
         sendData["message"] = "Successfully create_stream"
-        print("Successfully create_stream")
         worker_thread = threading.Thread(target=process_stream_data, args=(binance_websocket_api_manager,))
         worker_thread.start()
 
@@ -120,13 +114,11 @@ def start_websocket_listener(start_or_stop):
     return sendData
 
 
-
 #  Define symbols
 symbols = ['ETHUSDT', 'BTCUSDT']
 lc_symbols = []
 for symbol in symbols:
-    lc_symbols.append(symbol.lower())#  Initialize binance client
-
-
+    lc_symbols.append(symbol.lower()) #Initialize binance client
 
 #start_websocket_listener()
+

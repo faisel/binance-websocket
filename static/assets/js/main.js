@@ -85,14 +85,24 @@ function updateValues(data) {
     // FETCHING DATA FROM JSON FILE
     const price_btc_danger_alert = document.getElementById('btc-danger-alert');
     const price_btc = document.getElementById('price-btc');
+    const price_btc_big_p = document.getElementById('price-btc-big-p');
+    const price_btc_i = document.getElementById('price-btc-i');
     const price_btc_time = document.getElementById('price-btc-time');
 
     const price_eth_danger_alert = document.getElementById('eth-danger-alert');
     const price_eth = document.getElementById('price-eth');
+    const price_ethbig_p = document.getElementById('price-eth-big-p');
+    const price_eth_i = document.getElementById('price-eth-i');
     const price_eth_time = document.getElementById('price-eth-time');
 
     price_btc.innerHTML=parseFloat(data["btc"]["price"]).toFixed(3);
+    price_btc_big_p.innerHTML=parseFloat(data["btc"]["price_big_p"]).toFixed(3);
+    price_btc_i.innerHTML=parseFloat(data["btc"]["price_i"]).toFixed(3);
+
     price_eth.innerHTML=parseFloat(data["eth"]["price"]).toFixed(3);
+    price_ethbig_p.innerHTML=parseFloat(data["eth"]["price_big_p"]).toFixed(3);
+    price_eth_i.innerHTML=parseFloat(data["eth"]["price_i"]).toFixed(3);
+    
 
     price_btc_time.innerHTML=data["btc"]["apptime"];
     price_eth_time.innerHTML=data["eth"]["apptime"];

@@ -11,6 +11,7 @@ from dotenv import load_dotenv, find_dotenv
 
 #Get the trigger from hedge_stream_websocket
 def websocket_price_triggered(data):
+    
     if(data):
         if(data["symbol"]):
             if(data["price"]):
@@ -106,7 +107,7 @@ def is_websocket_working():
 
     sendData["test_time"] = str(current_time_string)
     
-    print("btc_data", btc_data)
+    #print("btc_data", btc_data)
     if(btc_data):
         sendData["btc_data"] = btc_data
         current_time_reduced_2_min = current_time - 120
@@ -123,7 +124,7 @@ def is_websocket_working():
         sendData["is_btc_data_ok"] = False
         print("NO btc_data - is_websocket_working")
     
-    print("eth_data", eth_data)
+    #print("eth_data", eth_data)
     if(eth_data):
         sendData["eth_data"] = eth_data
         current_time_reduced_2_min = current_time - 120
@@ -153,8 +154,10 @@ def get_env_var():
     SEND_EMAIL = os.getenv("SEND_EMAIL")
     SEND_EMAIL_PASSWORD = os.getenv("SEND_EMAIL_PASSWORD")
     RECEIVER_EMAIL = os.getenv("RECEIVER_EMAIL")
+    binance_api_key = os.getenv("BINANCE_API_KEY")
+    binance_api_secret = os.getenv("BINANCE_API_SECRET")
 
-    if(SEND_EMAIL and SEND_EMAIL_PASSWORD and RECEIVER_EMAIL):
+    if(SEND_EMAIL and SEND_EMAIL_PASSWORD and RECEIVER_EMAIL and binance_api_key and binance_api_secret):
         sendData["data"] = {
             "send_email" : SEND_EMAIL,
             "send_email_password" : SEND_EMAIL_PASSWORD,

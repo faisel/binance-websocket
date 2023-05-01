@@ -1,6 +1,9 @@
 {
-    "apptime": "Mar 29 05:57:03",
-    "timestamp": 1680062223.0,
+    "apptime": "May 01 22:22:22 ",
+    "servertime": "May 01 22:22:22",
+    "timestamp": 1682972542.0,
     "symbol": "BTCUSDT",
-    "price": "27354.80000000"
+    "price": "27833.54676984",
+    "price_big_p": "27923.81571607",
+    "price_i": "27847.89952381"
 }

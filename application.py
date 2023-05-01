@@ -64,13 +64,17 @@ def price():
                         "apptime": btc_data["apptime"],
                         "timestamp": btc_data["timestamp"],
                         "symbol": btc_data["symbol"],
-                        "price": btc_data["price"]
+                        "price": btc_data["price"],
+                        "price_big_p": btc_data["price_big_p"],
+                        "price_i": btc_data["price_i"]
                     },
             "eth" : {
                     "apptime": eth_data["apptime"],
                     "timestamp": eth_data["timestamp"],
                     "symbol": eth_data["symbol"],
-                    "price": eth_data["price"]
+                    "price": eth_data["price"],
+                    "price_big_p": eth_data["price_big_p"],
+                    "price_i": eth_data["price_i"]
                 }
         }
     else:
