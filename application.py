@@ -66,7 +66,9 @@ def price():
                         "symbol": btc_data["symbol"],
                         "price": btc_data["price"],
                         "price_big_p": btc_data["price_big_p"],
-                        "price_i": btc_data["price_i"]
+                        "price_i": btc_data["price_i"],
+                        "price_diff": btc_data["price_diff"],
+                        "is_big_diff": btc_data["is_big_diff"]
                     },
             "eth" : {
                     "apptime": eth_data["apptime"],
@@ -74,7 +76,9 @@ def price():
                     "symbol": eth_data["symbol"],
                     "price": eth_data["price"],
                     "price_big_p": eth_data["price_big_p"],
-                    "price_i": eth_data["price_i"]
+                    "price_i": eth_data["price_i"],
+                    "price_diff": eth_data["price_diff"],
+                    "is_big_diff": eth_data["is_big_diff"]
                 }
         }
     else:
