@@ -5,7 +5,7 @@ window.addEventListener('load', function () {
     // Your document is loaded.
     var fetchInterval = 1000; // 1 seconds.
     // Invoke the request every 1 seconds.
-    setInterval(fetchprice, fetchInterval);
+    // setInterval(fetchprice, fetchInterval);
 
     var fetchTriggerInterval2Sec = 2000; // 2 seconds.
     setInterval(fetchTriggerData, fetchTriggerInterval2Sec);

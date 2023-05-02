@@ -1,11 +1,11 @@
 {
-    "apptime": "May 02 11:07:47",
-    "servertime": "May 02 11:07:47",
-    "timestamp": 1683018467.0,
+    "apptime": "May 02 12:56:57",
+    "servertime": "May 02 12:56:57",
+    "timestamp": 1683025017.0,
     "symbol": "ETHUSDT",
-    "price": "1830.30000000",
-    "price_big_p": "1834.91165663",
-    "price_i": "1830.90641026",
+    "price": "1829.37000000",
+    "price_big_p": "1828.80393083",
+    "price_i": "1830.02538462",
     "price_diff": null,
     "is_big_diff": false
 }

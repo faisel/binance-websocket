@@ -4,6 +4,7 @@ import time
 import os
 import logging
 from datetime import datetime
+import pytz
 from unicorn_binance_websocket_api.manager import BinanceWebSocketApiManager
 from stream.stream_trigger import websocket_price_triggered
 
@@ -34,9 +35,11 @@ def is_empty_message(message):
     return False
 
 def handle_price_change(symbol, timestamp, price, price_big_p, price_i):
-    current_time = datetime.now()
+    zurich_timezone = pytz.timezone('Europe/Zurich')
+    current_time = datetime.now(zurich_timezone)
+
     current_time_string = current_time.strftime("%b")+" "+current_time.strftime("%d")+" "+current_time.strftime("%H")+":"+current_time.strftime("%M")+":"+current_time.strftime("%S")
-    current_time_string_price_time = datetime.fromtimestamp(round((timestamp/1000),0)).strftime('%b %d %H:%M:%S')
+    current_time_string_price_time = (datetime.fromtimestamp(round((timestamp/1000),0))).astimezone(zurich_timezone).strftime('%b %d %H:%M:%S')
 
     if(symbol and price and current_time_string and current_time_string_price_time):
         websocket_price_triggered({

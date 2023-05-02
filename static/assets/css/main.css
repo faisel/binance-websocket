@@ -28,23 +28,14 @@ body {
    padding: 10px;
 }
 
-.color-yellow {
-   color: yellow;
-}
 
-.color-green {
-   color: green;
-}
-
-.color-red {
-   color: red;
-}
 
 .live-price-diff h4 {
    background-color: black !important;
    padding: 10px;
    margin-left: 10px;
    margin-top: 10px;
+   color: #373737;
 }
 
 #btc-live-price-diff {
@@ -53,4 +44,16 @@ body {
 
 #eth-live-price-diff {
    display: flex;
+}
+
+.color-yellow {
+   color: yellow !important;
+}
+
+.color-green {
+   color: green !important;
+}
+
+.color-red {
+   color: red !important;
 }
