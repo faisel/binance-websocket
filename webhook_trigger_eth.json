@@ -1,0 +1,8 @@
+{
+    "trigger_webhook": "https://killerhedge.bullparrot.com/crypto-webhook",
+    "trigger_status": "success",
+    "trigger_time": "May 02 11:07:46",
+    "trigger_timestamp": 1683018466.0,
+    "trigger_symbol": "ETHUSDT",
+    "trigger_price": "1830.29000000"
+}

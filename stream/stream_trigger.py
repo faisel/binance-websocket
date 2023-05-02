@@ -11,7 +11,6 @@ from dotenv import load_dotenv, find_dotenv
 
 #Get the trigger from hedge_stream_websocket
 def websocket_price_triggered(data):
-    
     if(data):
         if(data["symbol"]):
             if(data["price"]):
@@ -20,34 +19,46 @@ def websocket_price_triggered(data):
                     # Opening JSON file
                     if(data["symbol"] == "BTCUSDT"):
                         json_file_price = open('price_btc.json')
+
+                        if(json_file_price is not None):
+                            json_data = None
+                            try:
+                                json_data = json.load(json_file_price)
+                            except json.JSONDecodeError:
+                                print("Empty response - price_btc.json - /price")
+                                pass
+                            if(json_data is not None):
+                                market_price = int(round(float(data["price"]), 3))
+                                json_data_price = int(round(float(json_data["price"]), 3))
+                                if(market_price != json_data_price):
+                                    price_diff = abs(json_data_price - market_price)
+                                    data["price_diff"] = price_diff
+                                    if(price_diff >= 10):
+                                        data["is_big_diff"] = True
+                                    trigger_webhook(data) #Trigger the new price to webhook
+
+
                     elif(data["symbol"] == "ETHUSDT"):
                         json_file_price = open('price_eth.json')
 
-                    if(json_file_price is not None):
-                        json_data = None
-                        try:
-                            json_data = json.load(json_file_price)
-                        except json.JSONDecodeError:
-                            print("Empty response - price_btc.json - /price")
-                            pass
+                        if(json_file_price is not None):
+                            json_data = None
+                            try:
+                                json_data = json.load(json_file_price)
+                            except json.JSONDecodeError:
+                                print("Empty response - price_btc.json - /price")
+                                pass
+                            if(json_data is not None):
+                                market_price = round(float(data["price"]), 1)
+                                json_data_price = round(float(json_data["price"]), 1)
+                                if(market_price != json_data_price):
+                                    price_diff = abs(json_data_price - market_price)
+                                    data["price_diff"] = price_diff
+                                    if(price_diff >= 5):
+                                        data["is_big_diff"] = True
+                                    trigger_webhook(data) #Trigger the new price to webhook
 
-                        if(json_data is not None):
-                            market_price = int(round(float(data["price"]), 3))
-                            json_data_price = int(round(float(json_data["price"]), 3))
-                            if(market_price != json_data_price):
-                                trigger_webhook(data) #Trigger the new price to webhook
-
-                                # print("###########################")
-                                # print("market_price", market_price)
-                                # print("json_data_price", json_data_price)
-                                # print("###########################")
-                            # else:
-                            #     print("market_price", market_price)
-                            #     print("json_data_price", json_data_price)
-                            # trigger_webhook(data) #Trigger the new price to webhook
-                            # save_price_locally(data) #Save the data locally
-
-                        save_price_locally(data) #Save the data locally
+                    save_price_locally(data) #Save the data locally
 
                 else:
                     print("No apptime or No timestamp websocket_price_triggered "+data["symbol"]+" "+data["price"])
@@ -78,6 +89,7 @@ def save_price_locally(data):
 
 #Trigger the new price to webhook
 def trigger_webhook(price_data):
+    trigger_status = None
     sendData = {
         "passphrase" : "0cce3DB04ed7-e645-4b16-8786-b260a34f5Z47433ab32",
         "data" : price_data
@@ -86,9 +98,35 @@ def trigger_webhook(price_data):
     url = "https://killerhedge.bullparrot.com/crypto-webhook"
     if(price_data):
         r = requests.post(url, data=json.dumps(sendData), headers={"Content-Type": "application/json", "Access-Control-Allow-Origin": "*"})
+        trigger_status = r.text
+    save_trigger_data_locally({
+        "trigger_webhook" : url,
+        "trigger_status" : trigger_status,
+        "trigger_time" : price_data["apptime"],
+        "trigger_timestamp" : price_data["timestamp"],
+        "trigger_symbol" : price_data["symbol"],
+        "trigger_price" : price_data["price"]
+    })
+    return True
+
+
+#Save the TriggerData locally
+def save_trigger_data_locally(trigger_data):
+    # Serializing json
+    json_object = json.dumps(trigger_data, indent=4)
+    
+    if(trigger_data["trigger_symbol"] == "BTCUSDT"):
+        with open("webhook_trigger_btc.json", "w") as outfile:
+            outfile.write(json_object)
+
+    if(trigger_data["trigger_symbol"] == "ETHUSDT"):
+        with open("webhook_trigger_eth.json", "w") as outfile:
+            outfile.write(json_object)
 
     return True
-    
+
+
+
 
 #Check if the websocket is working properly
 def is_websocket_working():

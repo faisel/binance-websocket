@@ -9,11 +9,11 @@ Domain: binance-websocket: https://i43nqeej25.eu-central-1.awsapprunner.com/ - h
 #### Git commit & push - When push to github main, AWS will automatically update to server
 #### Change update date in templates/layouts/main.jinja2
 git add .
-git commit -m 'markPrice@1s updated'
+git commit -m 'Trigger data updated'
 git push origin main
 
 
-# Run locally
+# Run locallyflask --app application.py --debug run
 flask --app application.py --debug run
 
 

@@ -36,7 +36,7 @@ def is_empty_message(message):
 def handle_price_change(symbol, timestamp, price, price_big_p, price_i):
     current_time = datetime.now()
     current_time_string = current_time.strftime("%b")+" "+current_time.strftime("%d")+" "+current_time.strftime("%H")+":"+current_time.strftime("%M")+":"+current_time.strftime("%S")
-    current_time_string_price_time = datetime.fromtimestamp(round((timestamp/1000),0)).strftime('%b %d %H:%M:%S ')
+    current_time_string_price_time = datetime.fromtimestamp(round((timestamp/1000),0)).strftime('%b %d %H:%M:%S')
 
     if(symbol and price and current_time_string and current_time_string_price_time):
         websocket_price_triggered({
@@ -46,7 +46,9 @@ def handle_price_change(symbol, timestamp, price, price_big_p, price_i):
             "symbol": symbol,
             "price": price, #// Mark price
             "price_big_p": price_big_p, #// Index price
-            "price_i": price_i #// Estimated Settle Price, only useful in the last hour before the settlement starts
+            "price_i": price_i, #// Estimated Settle Price, only useful in the last hour before the settlement starts
+            "price_diff": None,
+            "is_big_diff": False
         })
     else:
         if((not symbol) and (not price) and (not current_time_string)):
