@@ -2,6 +2,7 @@ from flask import jsonify
 import json, requests, logging
 import time
 from datetime import datetime
+import pytz
 import smtplib
 from email.message import EmailMessage
 import os
@@ -11,6 +12,7 @@ from dotenv import load_dotenv, find_dotenv
 
 #Get the trigger from hedge_stream_websocket
 def websocket_price_triggered(data):
+    #print("data", data)
     if(data):
         if(data["symbol"]):
             if(data["price"]):
@@ -95,7 +97,8 @@ def trigger_webhook(price_data):
         "data" : price_data
     }
     #print(sendData)
-    url = "https://killerhedge.bullparrot.com/crypto-webhook"
+    #url = "https://killerhedge.bullparrot.com/crypto-webhook"
+    url = "http://bullparrottokyoeb-env.eba-rwdb5exe.ap-northeast-1.elasticbeanstalk.com/crypto-webhook"
     if(price_data):
         r = requests.post(url, data=json.dumps(sendData), headers={"Content-Type": "application/json", "Access-Control-Allow-Origin": "*"})
         trigger_status = r.text
@@ -171,6 +174,11 @@ def is_websocket_working():
         sendData["message"] = "No btc_data and eth_data available"
 
     now = datetime.now()
+
+    zurich_timezone = pytz.timezone('Europe/Zurich')
+    current_time = datetime.now(zurich_timezone)
+
+
     current_time = datetime.timestamp(now)
     current_time_string = now.strftime("%b")+" "+now.strftime("%d")+" "+now.strftime("%H")+":"+now.strftime("%M")+":"+now.strftime("%S")
 

@@ -5,7 +5,7 @@ window.addEventListener('load', function () {
     // Your document is loaded.
     var fetchInterval = 1000; // 1 seconds.
     // Invoke the request every 1 seconds.
-    // setInterval(fetchprice, fetchInterval);
+    setInterval(fetchprice, fetchInterval);
 
     var fetchTriggerInterval2Sec = 2000; // 2 seconds.
     setInterval(fetchTriggerData, fetchTriggerInterval2Sec);
@@ -129,16 +129,29 @@ function updateValues(data) {
     }
     $(price_eth_price_diff).html('<h4 class='+eth_color_class+'>'+eth_big_diff+'</h4> <h4 class='+eth_color_class+'>'+data["eth"]["price_diff"]+'</h4>')
 
+    let now_time = Date.now();
+    let now_time_seconds = Math.trunc(now_time/1000);
+    let current_time_format = new Intl.DateTimeFormat('de-EU',{
+                                        year: 'numeric',
+                                        month: 'numeric',
+                                        day: 'numeric',
+                                        hour: 'numeric',
+                                        minute: 'numeric',
+                                        second: 'numeric',
+                                        hourCycle: 'h23',
+                                        timeZone: 'Europe/Zurich'
+                                    }).format(now_time)
 
-    var current_time = parseInt(parseFloat(Date.now()/1000).toFixed(0));
-    if(current_time && data["btc"]["timestamp"]) {
+
+
+    if(now_time_seconds && data["btc"]["timestamp"]) {
         //Reduce 2 minutes 
-        var current_time_reduced_2_min = current_time - 120
+        var current_time_reduced_2_min = now_time_seconds - 120
 
         if(data["btc"]["timestamp"] < current_time_reduced_2_min) {
             $(price_btc_danger_alert).show();
             console.log("Danger!!!! App crushed, BTC price NOT LIVE, Urgent!!!! restart app aws elastic beanstalk");
-            console.log("current_time", current_time);
+            console.log("current_time", current_time_format);
             console.log("btc", data["btc"]["timestamp"]);
         } else {
             $(price_btc_danger_alert).hide();
@@ -147,7 +160,7 @@ function updateValues(data) {
         if(data["eth"]["timestamp"] < current_time_reduced_2_min) {
             $(price_eth_danger_alert).show();
             console.log("Danger!!!! App crushed, ETH price NOT LIVE, Urgent!!!! restart app aws elastic beanstalk");
-            console.log("current_time", current_time);
+            console.log("current_time", current_time_format);
             console.log("eth", data["eth"]["timestamp"]);
         } else {
             $(price_eth_danger_alert).hide();

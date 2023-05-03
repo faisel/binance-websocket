@@ -80,6 +80,7 @@ def process_stream_data(binance_websocket_api_manager):
         else:
             oldest_data_dict = json.loads(oldest_data)
             data = oldest_data_dict['data'] #Handle price change
+            print("data", data)
             handle_price_change(symbol=data['s'], timestamp=data['E'], price=data['p'], price_big_p=data['P'], price_i=data['i'])
 
 
